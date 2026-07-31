@@ -128,20 +128,23 @@ export function App() {
         <Route path="/subscription/failed" element={<SubscriptionFailedPage />} />
 
         {/* Convenient Top-Level Direct Aliases */}
-        <Route path="/dashboard" element={<Navigate to="/company-admin/dashboard" replace />} />
-        <Route path="/employees" element={<Navigate to="/company-admin/employees" replace />} />
+        <Route path="/dashboard" element={<Navigate to="/employee/dashboard" replace />} />
+        <Route path="/employees" element={<Navigate to="/employee/employees" replace />} />
         <Route path="/managers" element={<Navigate to="/company-admin/managers" replace />} />
-        <Route path="/leads" element={<Navigate to="/company-admin/leads" replace />} />
-        <Route path="/tasks" element={<Navigate to="/company-admin/tasks" replace />} />
-        <Route path="/organizations" element={<Navigate to="/company-admin/organizations" replace />} />
-        <Route path="/contacts" element={<Navigate to="/company-admin/contacts" replace />} />
+        <Route path="/leads" element={<Navigate to="/employee/leads" replace />} />
+        <Route path="/tasks" element={<Navigate to="/employee/tasks" replace />} />
+        <Route path="/organizations" element={<Navigate to="/employee/organizations" replace />} />
+        <Route path="/contacts" element={<Navigate to="/employee/contacts" replace />} />
 
-        {/* Employee CRM Module Routes */}
-        <Route path="/crm" element={<CrmLayout />}>
+        {/* Legacy /crm/* Redirect to /employee/* */}
+        <Route path="/crm" element={<Navigate to="/employee/dashboard" replace />} />
+        <Route path="/crm/*" element={<Navigate to="/employee/dashboard" replace />} />
+
+        {/* Primary Employee Portal Routes (/employee/*) */}
+        <Route path="/employee" element={<CrmLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<EmployeeDashboard />} />
-          <Route path="employees" element={<EmployeeDashboard />} />
-          <Route path="employees/create" element={<EmployeeDashboard />} />
+          <Route path="employees" element={<ProfileNotificationsPage />} />
           <Route path="leads" element={<MyLeadsPage />} />
           <Route path="leads/details" element={<LeadDetailsPage />} />
           <Route path="organizations" element={<OrganizationsPage />} />

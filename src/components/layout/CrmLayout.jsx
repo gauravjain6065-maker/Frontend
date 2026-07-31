@@ -4,7 +4,6 @@ import {
   Shield, 
   LayoutDashboard, 
   Users, 
-  UserPlus, 
   Target, 
   UserCheck, 
   Building2, 
@@ -29,37 +28,36 @@ const CrmLayout = ({ children }) => {
     {
       group: 'CORE DASHBOARD',
       items: [
-        { name: 'Dashboard', path: '/crm/dashboard', icon: LayoutDashboard }
+        { name: 'Dashboard', path: '/employee/dashboard', icon: LayoutDashboard }
       ]
     },
     {
       group: 'TEAM & HR',
       items: [
-        { name: 'Employee List', path: '/crm/employees', icon: Users },
-        { name: 'Create Employee', path: '/crm/employees/create', icon: UserPlus }
+        { name: 'Employee List', path: '/employee/employees', icon: Users }
       ]
     },
     {
       group: 'SALES & PIPELINE',
       items: [
-        { name: 'Lead Directory', path: '/crm/leads', icon: Target },
-        { name: 'Lead Details', path: '/crm/leads/details', icon: UserCheck },
-        { name: 'Organizations', path: '/crm/organizations', icon: Building2 },
-        { name: 'Contacts', path: '/crm/contacts', icon: Contact }
+        { name: 'Lead Directory', path: '/employee/leads', icon: Target },
+        { name: 'Lead Details', path: '/employee/leads/details', icon: UserCheck },
+        { name: 'Organizations', path: '/employee/organizations', icon: Building2 },
+        { name: 'Contacts', path: '/employee/contacts', icon: Contact }
       ]
     },
     {
       group: 'ACTIVITIES & TASKS',
       items: [
-        { name: 'Task List', path: '/crm/tasks', icon: ClipboardList },
-        { name: 'Task Details', path: '/crm/tasks/details', icon: PlusSquare },
-        { name: 'Follow-ups', path: '/crm/followups', icon: Calendar }
+        { name: 'Task List', path: '/employee/tasks', icon: ClipboardList },
+        { name: 'Task Details', path: '/employee/tasks/details', icon: PlusSquare },
+        { name: 'Follow-ups', path: '/employee/followups', icon: Calendar }
       ]
     },
     {
       group: 'ANALYTICS & REPORTS',
       items: [
-        { name: 'Activity Timeline', path: '/crm/timeline', icon: Activity }
+        { name: 'Activity Timeline', path: '/employee/timeline', icon: Activity }
       ]
     }
   ];
@@ -170,7 +168,7 @@ const CrmLayout = ({ children }) => {
               <Menu className="w-5 h-5" />
             </button>
             <div className="text-xs text-gray-500 font-medium hidden sm:block">
-              Employee Module / <span className="text-blue-600 font-semibold capitalize">{location.pathname.split('/').pop() || 'Dashboard'}</span>
+              Employee Portal / <span className="text-blue-600 font-semibold capitalize">{location.pathname.split('/').pop() || 'Dashboard'}</span>
             </div>
           </div>
 
@@ -195,7 +193,7 @@ const CrmLayout = ({ children }) => {
 
             <div className="h-6 w-[1px] bg-gray-200 mx-1" />
 
-            <Link to="/crm/profile" className="flex items-center gap-2.5 p-1 rounded-lg hover:bg-gray-50 transition cursor-pointer">
+            <Link to="/employee/profile" className="flex items-center gap-2.5 p-1 rounded-lg hover:bg-gray-50 transition cursor-pointer">
               <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
                 JD
               </div>
