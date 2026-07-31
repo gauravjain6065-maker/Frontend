@@ -65,7 +65,7 @@ export function Sidebar({ collapsed, toggleCollapse, mobileOpen, closeMobile }) 
   const location = useLocation();
 
   // Determine current active module route prefix
-  let prefix = '/company-admin';
+  let prefix = '/admin';
   if (location.pathname.startsWith('/manager')) {
     prefix = '/manager';
   } else if (location.pathname.startsWith('/employee') || location.pathname.startsWith('/crm')) {

@@ -128,32 +128,21 @@ export function App() {
         <Route path="/subscription/failed" element={<SubscriptionFailedPage />} />
 
         {/* Convenient Top-Level Direct Aliases */}
-        <Route path="/dashboard" element={<Navigate to="/company-admin/dashboard" replace />} />
-        <Route path="/employees" element={<Navigate to="/company-admin/employees" replace />} />
-        <Route path="/managers" element={<Navigate to="/company-admin/managers" replace />} />
-        <Route path="/leads" element={<Navigate to="/company-admin/leads" replace />} />
-        <Route path="/tasks" element={<Navigate to="/company-admin/tasks" replace />} />
-        <Route path="/organizations" element={<Navigate to="/company-admin/organizations" replace />} />
-        <Route path="/contacts" element={<Navigate to="/company-admin/contacts" replace />} />
-
-        {/* Short /admin Direct Route Redirects */}
-        <Route path="/admin" element={<Navigate to="/company-admin/dashboard" replace />} />
-        <Route path="/admin/dashboard" element={<Navigate to="/company-admin/dashboard" replace />} />
-        <Route path="/admin/managers" element={<Navigate to="/company-admin/managers" replace />} />
-        <Route path="/admin/employees" element={<Navigate to="/company-admin/employees" replace />} />
-        <Route path="/admin/organizations" element={<Navigate to="/company-admin/organizations" replace />} />
-        <Route path="/admin/contacts" element={<Navigate to="/company-admin/contacts" replace />} />
-        <Route path="/admin/leads" element={<Navigate to="/company-admin/leads" replace />} />
-        <Route path="/admin/tasks" element={<Navigate to="/company-admin/tasks" replace />} />
-        <Route path="/admin/followups" element={<Navigate to="/company-admin/followups" replace />} />
-        <Route path="/admin/reports" element={<Navigate to="/company-admin/reports" replace />} />
-        <Route path="/admin/subscription" element={<Navigate to="/company-admin/subscription" replace />} />
-        <Route path="/admin/notifications" element={<Navigate to="/company-admin/notifications" replace />} />
-        <Route path="/admin/profile" element={<Navigate to="/company-admin/profile" replace />} />
+        <Route path="/dashboard" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/employees" element={<Navigate to="/admin/employees" replace />} />
+        <Route path="/managers" element={<Navigate to="/admin/managers" replace />} />
+        <Route path="/leads" element={<Navigate to="/admin/leads" replace />} />
+        <Route path="/tasks" element={<Navigate to="/admin/tasks" replace />} />
+        <Route path="/organizations" element={<Navigate to="/admin/organizations" replace />} />
+        <Route path="/contacts" element={<Navigate to="/admin/contacts" replace />} />
 
         {/* Legacy /crm/* Redirect to /employee/* */}
         <Route path="/crm" element={<Navigate to="/employee/dashboard" replace />} />
         <Route path="/crm/*" element={<Navigate to="/employee/dashboard" replace />} />
+
+        {/* Legacy /company-admin/* Redirect to /admin/* */}
+        <Route path="/company-admin" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/company-admin/*" element={<Navigate to="/admin/dashboard" replace />} />
 
         {/* Primary Employee Portal Routes (/employee/*) */}
         <Route path="/employee" element={<CrmLayout />}>
@@ -205,8 +194,8 @@ export function App() {
           <Route path="change-password" element={<ManagerChangePassword />} />
         </Route>
 
-        {/* Company Admin Module Nested Routes */}
-        <Route path="/company-admin" element={<CompanyAdminLayout />}>
+        {/* Primary Admin Portal Nested Routes (/admin/*) */}
+        <Route path="/admin" element={<CompanyAdminLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
 
