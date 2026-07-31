@@ -1,0 +1,10 @@
+export { default as LandingPage } from './LandingPage';
+export { default as PricingPage } from './PricingPage';
+export { default as SignupPage } from './SignupPage';
+export { default as LoginPage } from './LoginPage';
+export { default as ForgotPasswordPage } from './ForgotPasswordPage';
+export { default as ResetPasswordPage } from './ResetPasswordPage';
+export { default as EmailVerificationPage } from './EmailVerificationPage';
+export { default as SubscriptionSuccessPage } from './SubscriptionSuccessPage';
+export { default as SubscriptionFailedPage } from './SubscriptionFailedPage';
+export { default as NotFoundPage } from './NotFoundPage';

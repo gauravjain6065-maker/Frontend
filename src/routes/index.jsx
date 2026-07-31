@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // Playground & Layout Shell
-import UIPlayground from '../pages/UIPlayground';
+import UIPlayground from '../pages/playground/UIPlayground';
 import { CompanyAdminLayout } from '../components/layout';
 
 // Page Views

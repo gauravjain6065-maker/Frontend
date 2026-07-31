@@ -10,36 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@tailwindcss/vite": "^4.3.3",
-    "lucide-react": "^1.28.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "tailwindcss": "^4.3.3"
-=======
-<<<<<<< HEAD
     "lucide-react": "^1.28.0",
     "prop-types": "^15.8.1",
-=======
-    "@tailwindcss/vite": "^4.3.3",
-    "lucide-react": "^1.28.0",
->>>>>>> develop
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2"
->>>>>>> 413f5c6692d57379365d4f133b1a4dff48d2f4a5
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.5.4",
     "oxlint": "^1.75.0",
-<<<<<<< HEAD
-=======
     "postcss": "^8.5.25",
->>>>>>> develop
     "tailwindcss": "^4.3.3",
     "vite": "^8.2.0"
   }

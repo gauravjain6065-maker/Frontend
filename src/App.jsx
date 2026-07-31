@@ -1,107 +1,37 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { ManagerLayout } from './components/layout/ManagerLayout';
-import {
-  Dashboard,
-  EmployeeList,
-  CreateEmployee,
-  EmployeeDetails,
-  EditEmployee,
-  LeadList,
-  LeadDetails,
-  EditLead,
-  AssignLead,
-  OrganizationList,
-  OrganizationDetails,
-  ContactList,
-  ContactDetails,
-  TaskList,
-  CreateTask,
-  TaskDetails,
-  FollowUpList,
-  CreateFollowUp,
-  TeamPerformanceReport,
-  LeadReport,
-  Notifications,
-  MyProfile,
-  ChangePassword,
-} from './pages/manager';
-
-const pageComponents = {
-  Dashboard,
-  EmployeeList,
-  CreateEmployee,
-  EmployeeDetails,
-  EditEmployee,
-  LeadList,
-  LeadDetails,
-  EditLead,
-  AssignLead,
-  OrganizationList,
-  OrganizationDetails,
-  ContactList,
-  ContactDetails,
-  TaskList,
-  CreateTask,
-  TaskDetails,
-  FollowUpList,
-  CreateFollowUp,
-  TeamPerformanceReport,
-  LeadReport,
-  Notifications,
-  MyProfile,
-  ChangePassword,
-};
-
-export function App() {
-  const [activePage, setActivePage] = useState('Dashboard');
-
-  const CurrentPageComponent = pageComponents[activePage] || Dashboard;
-
-  return (
-    <ManagerLayout activePage={activePage} setActivePage={setActivePage}>
-      <CurrentPageComponent />
-    </ManagerLayout>
-=======
-<<<<<<< HEAD
-import React from 'react';
-import { RouterProvider } from 'react-router-dom';
-import { router } from './routes/index';
-
-function App() {
-  return (
-    <RouterProvider router={router} />
-=======
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Layout
-import CrmLayout from './components/CrmLayout';
+import CrmLayout from './components/layout/CrmLayout';
 
-// Auth Pages
-import LandingPage from './pages/LandingPage';
-import PricingPage from './pages/PricingPage';
-import SignupPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-import EmailVerificationPage from './pages/EmailVerificationPage';
-import SubscriptionSuccessPage from './pages/SubscriptionSuccessPage';
-import SubscriptionFailedPage from './pages/SubscriptionFailedPage';
-import NotFoundPage from './pages/NotFoundPage';
+// SaaS Auth Pages
+import {
+  LandingPage,
+  PricingPage,
+  SignupPage,
+  LoginPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  EmailVerificationPage,
+  SubscriptionSuccessPage,
+  SubscriptionFailedPage,
+  NotFoundPage
+} from './pages/auth';
 
-// CRM Pages
-import EmployeeDashboard from './pages/crm/EmployeeDashboard';
-import MyLeadsPage from './pages/crm/MyLeadsPage';
-import LeadDetailsPage from './pages/crm/LeadDetailsPage';
-import OrganizationsPage from './pages/crm/OrganizationsPage';
-import OrganizationDetailsPage from './pages/crm/OrganizationDetailsPage';
-import ContactsPage from './pages/crm/ContactsPage';
-import ContactDetailsPage from './pages/crm/ContactDetailsPage';
-import MyTasksPage from './pages/crm/MyTasksPage';
-import TaskDetailsPage from './pages/crm/TaskDetailsPage';
-import MyFollowupsPage from './pages/crm/MyFollowupsPage';
-import ActivityTimelinePage from './pages/crm/ActivityTimelinePage';
-import ProfileNotificationsPage from './pages/crm/ProfileNotificationsPage';
+// Employee CRM Pages
+import {
+  EmployeeDashboard,
+  MyLeadsPage,
+  LeadDetailsPage,
+  OrganizationsPage,
+  OrganizationDetailsPage,
+  ContactsPage,
+  ContactDetailsPage,
+  MyTasksPage,
+  TaskDetailsPage,
+  MyFollowupsPage,
+  ActivityTimelinePage,
+  ProfileNotificationsPage
+} from './pages/crm';
 
 function App() {
   return (
@@ -120,6 +50,7 @@ function App() {
 
         {/* Employee CRM Routes with Layout */}
         <Route path="/crm" element={<CrmLayout />}>
+          <Route index element={<EmployeeDashboard />} />
           <Route path="dashboard" element={<EmployeeDashboard />} />
           <Route path="employees" element={<ProfileNotificationsPage />} />
           <Route path="employees/create" element={<ProfileNotificationsPage />} />
@@ -140,8 +71,6 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
->>>>>>> develop
->>>>>>> 413f5c6692d57379365d4f133b1a4dff48d2f4a5
   );
 }
 
