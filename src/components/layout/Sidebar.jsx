@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { 
   LayoutDashboard, 
@@ -23,44 +23,54 @@ const MENU_GROUPS = [
   {
     title: 'Core',
     items: [
-      { path: '/company-admin/dashboard', name: 'Dashboard', icon: LayoutDashboard }
+      { key: 'dashboard', name: 'Dashboard', icon: LayoutDashboard }
     ]
   },
   {
     title: 'Management',
     items: [
-      { path: '/company-admin/managers', name: 'Managers', icon: Users },
-      { path: '/company-admin/employees', name: 'Employees', icon: User },
-      { path: '/company-admin/organizations', name: 'Organizations', icon: Building2 },
-      { path: '/company-admin/contacts', name: 'Contacts', icon: Contact }
+      { key: 'managers', name: 'Managers', icon: Users },
+      { key: 'employees', name: 'Employees', icon: User },
+      { key: 'organizations', name: 'Organizations', icon: Building2 },
+      { key: 'contacts', name: 'Contacts', icon: Contact }
     ]
   },
   {
     title: 'Sales',
     items: [
-      { path: '/company-admin/leads', name: 'Leads', icon: TrendingUp },
-      { path: '/company-admin/tasks', name: 'Tasks', icon: CheckSquare },
-      { path: '/company-admin/followups', name: 'Follow-ups', icon: PhoneCall }
+      { key: 'leads', name: 'Leads', icon: TrendingUp },
+      { key: 'tasks', name: 'Tasks', icon: CheckSquare },
+      { key: 'followups', name: 'Follow-ups', icon: PhoneCall }
     ]
   },
   {
     title: 'Analytics',
     items: [
-      { path: '/company-admin/reports', name: 'Reports', icon: BarChart3 }
+      { key: 'reports', name: 'Reports', icon: BarChart3 }
     ]
   },
   {
     title: 'System',
     items: [
-      { path: '/company-admin/subscription', name: 'Subscription', icon: CreditCard },
-      { path: '/company-admin/notifications', name: 'Notifications', icon: Bell },
-      { path: '/company-admin/settings/company-profile', name: 'Settings', icon: Settings },
-      { path: '/company-admin/profile', name: 'Profile', icon: UserCheck }
+      { key: 'subscription', name: 'Subscription', icon: CreditCard },
+      { key: 'notifications', name: 'Notifications', icon: Bell },
+      { key: 'settings/company-profile', name: 'Settings', icon: Settings },
+      { key: 'profile', name: 'Profile', icon: UserCheck }
     ]
   }
 ];
 
-export function Sidebar({ collapsed, toggleCollapse, mobileOpen, closeMobile, activePage, setActivePage, isMobileOpen, setIsMobileOpen }) {
+export function Sidebar({ collapsed, toggleCollapse, mobileOpen, closeMobile }) {
+  const location = useLocation();
+
+  // Determine current active module route prefix
+  let prefix = '/company-admin';
+  if (location.pathname.startsWith('/manager')) {
+    prefix = '/manager';
+  } else if (location.pathname.startsWith('/crm')) {
+    prefix = '/crm';
+  }
+
   return (
     <>
       {/* Mobile Backdrop Overlay */}
@@ -116,10 +126,11 @@ export function Sidebar({ collapsed, toggleCollapse, mobileOpen, closeMobile, ac
                 <div className="space-y-0.5">
                   {group.items.map((item, itemIdx) => {
                     const MenuIcon = item.icon;
+                    const fullPath = `${prefix}/${item.key}`;
                     return (
                       <NavLink
                         key={itemIdx}
-                        to={item.path}
+                        to={fullPath}
                         onClick={closeMobile}
                         className={({ isActive }) => `
                           flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all group relative

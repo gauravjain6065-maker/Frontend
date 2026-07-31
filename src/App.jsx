@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // Layouts
 import CrmLayout from './components/layout/CrmLayout';
-import { ManagerLayout } from './components/layout/ManagerLayout';
-import { CompanyAdminLayout } from './components/layout/CompanyAdminLayout';
+import ManagerLayout from './components/layout/ManagerLayout';
+import CompanyAdminLayout from './components/layout/CompanyAdminLayout';
 
 // SaaS Auth Pages
 import {
@@ -112,45 +112,6 @@ import AdminChangePassword from './pages/company-admin/profile/ChangePassword';
 // UI Playground
 import UIPlayground from './pages/playground/UIPlayground';
 
-// Manager Portal Shell Component for Interactive Page State Fallback
-function ManagerPortalShell() {
-  const [activePage, setActivePage] = useState('Dashboard');
-
-  const pageComponents = {
-    Dashboard: ManagerDashboard,
-    EmployeeList: ManagerEmployeeList,
-    CreateEmployee: ManagerCreateEmployee,
-    EmployeeDetails: ManagerEmployeeDetails,
-    EditEmployee: ManagerEditEmployee,
-    LeadList: ManagerLeadList,
-    LeadDetails: ManagerLeadDetails,
-    EditLead: ManagerEditLead,
-    AssignLead: ManagerAssignLead,
-    OrganizationList: ManagerOrgList,
-    OrganizationDetails: ManagerOrgDetails,
-    ContactList: ManagerContactList,
-    ContactDetails: ManagerContactDetails,
-    TaskList: ManagerTaskList,
-    CreateTask: ManagerCreateTask,
-    TaskDetails: ManagerTaskDetails,
-    FollowUpList: ManagerFollowUpList,
-    CreateFollowUp: ManagerCreateFollowUp,
-    TeamPerformanceReport: TeamPerformanceReport,
-    LeadReport: ManagerLeadReport,
-    Notifications: ManagerNotifications,
-    MyProfile: ManagerProfile,
-    ChangePassword: ManagerChangePassword,
-  };
-
-  const CurrentPageComponent = pageComponents[activePage] || ManagerDashboard;
-
-  return (
-    <ManagerLayout activePage={activePage} setActivePage={setActivePage}>
-      <CurrentPageComponent />
-    </ManagerLayout>
-  );
-}
-
 export function App() {
   return (
     <Router>
@@ -166,18 +127,18 @@ export function App() {
         <Route path="/subscription/success" element={<SubscriptionSuccessPage />} />
         <Route path="/subscription/failed" element={<SubscriptionFailedPage />} />
 
-        {/* Convenient Direct Shortcuts / Aliases */}
-        <Route path="/dashboard" element={<Navigate to="/crm/dashboard" replace />} />
+        {/* Convenient Top-Level Direct Aliases */}
+        <Route path="/dashboard" element={<Navigate to="/company-admin/dashboard" replace />} />
         <Route path="/employees" element={<Navigate to="/company-admin/employees" replace />} />
         <Route path="/managers" element={<Navigate to="/company-admin/managers" replace />} />
-        <Route path="/leads" element={<Navigate to="/crm/leads" replace />} />
-        <Route path="/tasks" element={<Navigate to="/crm/tasks" replace />} />
-        <Route path="/organizations" element={<Navigate to="/crm/organizations" replace />} />
-        <Route path="/contacts" element={<Navigate to="/crm/contacts" replace />} />
+        <Route path="/leads" element={<Navigate to="/company-admin/leads" replace />} />
+        <Route path="/tasks" element={<Navigate to="/company-admin/tasks" replace />} />
+        <Route path="/organizations" element={<Navigate to="/company-admin/organizations" replace />} />
+        <Route path="/contacts" element={<Navigate to="/company-admin/contacts" replace />} />
 
-        {/* Employee CRM Routes */}
+        {/* Employee CRM Module Routes */}
         <Route path="/crm" element={<CrmLayout />}>
-          <Route index element={<EmployeeDashboard />} />
+          <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<EmployeeDashboard />} />
           <Route path="employees" element={<EmployeeDashboard />} />
           <Route path="employees/create" element={<EmployeeDashboard />} />
@@ -194,41 +155,39 @@ export function App() {
           <Route path="profile" element={<ProfileNotificationsPage />} />
         </Route>
 
-        {/* Manager Module Nested Routes & State Fallback */}
-        <Route path="/manager" element={<ManagerPortalShell />} />
-        <Route path="/manager/*" element={
-          <ManagerLayout>
-            <Routes>
-              <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="dashboard" element={<ManagerDashboard />} />
-              <Route path="employees" element={<ManagerEmployeeList />} />
-              <Route path="employees/create" element={<ManagerCreateEmployee />} />
-              <Route path="employees/:id" element={<ManagerEmployeeDetails />} />
-              <Route path="employees/:id/edit" element={<ManagerEditEmployee />} />
-              <Route path="leads" element={<ManagerLeadList />} />
-              <Route path="leads/:id" element={<ManagerLeadDetails />} />
-              <Route path="leads/:id/edit" element={<ManagerEditLead />} />
-              <Route path="leads/:id/assign" element={<ManagerAssignLead />} />
-              <Route path="organizations" element={<ManagerOrgList />} />
-              <Route path="organizations/:id" element={<ManagerOrgDetails />} />
-              <Route path="contacts" element={<ManagerContactList />} />
-              <Route path="contacts/:id" element={<ManagerContactDetails />} />
-              <Route path="tasks" element={<ManagerTaskList />} />
-              <Route path="tasks/create" element={<ManagerCreateTask />} />
-              <Route path="tasks/:id" element={<ManagerTaskDetails />} />
-              <Route path="followups" element={<ManagerFollowUpList />} />
-              <Route path="followups/create" element={<ManagerCreateFollowUp />} />
-              <Route path="reports/team" element={<TeamPerformanceReport />} />
-              <Route path="reports/lead" element={<ManagerLeadReport />} />
-              <Route path="notifications" element={<ManagerNotifications />} />
-              <Route path="profile" element={<ManagerProfile />} />
-              <Route path="change-password" element={<ManagerChangePassword />} />
-              <Route path="*" element={<Navigate to="dashboard" replace />} />
-            </Routes>
-          </ManagerLayout>
-        } />
+        {/* Manager Module Nested Routes */}
+        <Route path="/manager" element={<ManagerLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<ManagerDashboard />} />
+          <Route path="managers" element={<ManagerEmployeeList />} />
+          <Route path="employees" element={<ManagerEmployeeList />} />
+          <Route path="employees/create" element={<ManagerCreateEmployee />} />
+          <Route path="employees/:id" element={<ManagerEmployeeDetails />} />
+          <Route path="employees/:id/edit" element={<ManagerEditEmployee />} />
+          <Route path="leads" element={<ManagerLeadList />} />
+          <Route path="leads/:id" element={<ManagerLeadDetails />} />
+          <Route path="leads/:id/edit" element={<ManagerEditLead />} />
+          <Route path="leads/:id/assign" element={<ManagerAssignLead />} />
+          <Route path="organizations" element={<ManagerOrgList />} />
+          <Route path="organizations/:id" element={<ManagerOrgDetails />} />
+          <Route path="contacts" element={<ManagerContactList />} />
+          <Route path="contacts/:id" element={<ManagerContactDetails />} />
+          <Route path="tasks" element={<ManagerTaskList />} />
+          <Route path="tasks/create" element={<ManagerCreateTask />} />
+          <Route path="tasks/:id" element={<ManagerTaskDetails />} />
+          <Route path="followups" element={<ManagerFollowUpList />} />
+          <Route path="followups/create" element={<ManagerCreateFollowUp />} />
+          <Route path="reports" element={<TeamPerformanceReport />} />
+          <Route path="reports/team" element={<TeamPerformanceReport />} />
+          <Route path="reports/lead" element={<ManagerLeadReport />} />
+          <Route path="subscription" element={<CurrentPlan />} />
+          <Route path="notifications" element={<ManagerNotifications />} />
+          <Route path="settings/company-profile" element={<CompanyProfile />} />
+          <Route path="profile" element={<ManagerProfile />} />
+          <Route path="change-password" element={<ManagerChangePassword />} />
+        </Route>
 
-        {/* Company Admin Module Routes */}
+        {/* Company Admin Module Nested Routes */}
         <Route path="/company-admin" element={<CompanyAdminLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
