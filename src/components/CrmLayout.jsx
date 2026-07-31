@@ -35,8 +35,8 @@ const CrmLayout = ({ children }) => {
     {
       group: 'TEAM & HR',
       items: [
-        { name: 'Employee List', path: '/crm/profile', icon: Users },
-        { name: 'Create Employee', path: '/crm/profile', icon: UserPlus }
+        { name: 'Employee List', path: '/crm/employees', icon: Users },
+        { name: 'Create Employee', path: '/crm/employees/create', icon: UserPlus }
       ]
     },
     {

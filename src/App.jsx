@@ -47,6 +47,8 @@ function App() {
         {/* Employee CRM Routes with Layout */}
         <Route path="/crm" element={<CrmLayout />}>
           <Route path="dashboard" element={<EmployeeDashboard />} />
+          <Route path="employees" element={<ProfileNotificationsPage />} />
+          <Route path="employees/create" element={<ProfileNotificationsPage />} />
           <Route path="leads" element={<MyLeadsPage />} />
           <Route path="leads/details" element={<LeadDetailsPage />} />
           <Route path="organizations" element={<OrganizationsPage />} />
