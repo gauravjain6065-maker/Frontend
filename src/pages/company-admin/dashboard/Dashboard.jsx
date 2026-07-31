@@ -54,6 +54,21 @@ import {
   QUICK_ACTIONS
 } from '../../../mock/dashboard/dashboardMock';
 
+// Simple internal helper component for generating circular initial badges in tables
+const AvatarMock = ({ name }) => {
+  const getInitials = (n) => {
+    if (!n) return '?';
+    const p = n.trim().split(/\s+/);
+    return p.length >= 2 ? (p[0][0] + p[p.length - 1][0]).toUpperCase() : n.slice(0, 2).toUpperCase();
+  };
+
+  return (
+    <div className="w-8 h-8 rounded-full bg-primary-100 border border-primary-200 text-primary-700 flex items-center justify-center font-bold text-[10px] select-none flex-shrink-0">
+      {getInitials(name)}
+    </div>
+  );
+};
+
 // Icon mapping dictionary to resolve string names from mock files
 const iconMap = {
   DollarSign,
@@ -539,18 +554,3 @@ export default function Dashboard() {
     </PageContainer>
   );
 }
-
-// Simple internal helper component for generating circular initial badges in tables
-const AvatarMock = ({ name }) => {
-  const getInitials = (n) => {
-    if (!n) return '?';
-    const p = n.trim().split(/\s+/);
-    return p.length >= 2 ? (p[0][0] + p[p.length - 1][0]).toUpperCase() : n.slice(0, 2).toUpperCase();
-  };
-
-  return (
-    <div className="w-8 h-8 rounded-full bg-primary-100 border border-primary-200 text-primary-700 flex items-center justify-center font-bold text-[10px] select-none flex-shrink-0">
-      {getInitials(name)}
-    </div>
-  );
-};
