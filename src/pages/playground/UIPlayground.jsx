@@ -35,7 +35,7 @@ import {
   Stack,
   Divider,
   PageLoader
-} from '../components/layout';
+} from '../../components/layout';
 
 import {
   Badge,
@@ -67,7 +67,7 @@ import {
   DataTable,
   Pagination,
   ChartPlaceholder
-} from '../components/ui';
+} from '../../components/ui';
 
 export default function UIPlayground() {
   // Navigation & Page State

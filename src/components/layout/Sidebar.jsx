@@ -60,7 +60,7 @@ const MENU_GROUPS = [
   }
 ];
 
-export default function Sidebar({ collapsed, toggleCollapse, mobileOpen, closeMobile }) {
+export function Sidebar({ collapsed, toggleCollapse, mobileOpen, closeMobile, activePage, setActivePage, isMobileOpen, setIsMobileOpen }) {
   return (
     <>
       {/* Mobile Backdrop Overlay */}
@@ -171,3 +171,5 @@ Sidebar.propTypes = {
   mobileOpen: PropTypes.bool,
   closeMobile: PropTypes.func
 };
+
+export default Sidebar;

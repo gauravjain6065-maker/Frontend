@@ -1,2 +1,2 @@
-export { default as DataTable } from './DataTable';
+export { Table as DataTable } from '../Table';
 export { default as Pagination } from './Pagination';

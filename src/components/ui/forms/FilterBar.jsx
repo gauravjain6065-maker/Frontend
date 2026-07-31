@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { X, Filter } from 'lucide-react';
 import SearchBar from './SearchBar';
-import Badge from '../data-display/Badge';
-import Stack from '../../layout/Stack';
+import Badge from '../Badge';
+const Stack = ({ children, className = '' }) => <div className={`flex items-center gap-2 ${className}`}>{children}</div>;
 
 /**
  * FilterBar component - Standard CRM filter panel managing search inputs and filter tags.

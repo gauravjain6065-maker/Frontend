@@ -1,7 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
-// Layout
+// Layouts
 import CrmLayout from './components/layout/CrmLayout';
+import { ManagerLayout } from './components/layout/ManagerLayout';
+import { CompanyAdminLayout } from './components/layout';
 
 // SaaS Auth Pages
 import {
@@ -33,7 +36,122 @@ import {
   ProfileNotificationsPage
 } from './pages/crm';
 
-function App() {
+// Manager Pages
+import {
+  Dashboard as ManagerDashboard,
+  EmployeeList as ManagerEmployeeList,
+  CreateEmployee as ManagerCreateEmployee,
+  EmployeeDetails as ManagerEmployeeDetails,
+  EditEmployee as ManagerEditEmployee,
+  LeadList as ManagerLeadList,
+  LeadDetails as ManagerLeadDetails,
+  EditLead as ManagerEditLead,
+  AssignLead as ManagerAssignLead,
+  OrganizationList as ManagerOrgList,
+  OrganizationDetails as ManagerOrgDetails,
+  ContactList as ManagerContactList,
+  ContactDetails as ManagerContactDetails,
+  TaskList as ManagerTaskList,
+  CreateTask as ManagerCreateTask,
+  TaskDetails as ManagerTaskDetails,
+  FollowUpList as ManagerFollowUpList,
+  CreateFollowUp as ManagerCreateFollowUp,
+  TeamPerformanceReport,
+  LeadReport as ManagerLeadReport,
+  Notifications as ManagerNotifications,
+  MyProfile as ManagerProfile,
+  ChangePassword as ManagerChangePassword
+} from './pages/manager';
+
+// Company Admin Pages
+import AdminDashboard from './pages/company-admin/dashboard/Dashboard';
+import AdminManagerList from './pages/company-admin/managers/ManagerList';
+import AdminCreateManager from './pages/company-admin/managers/CreateManager';
+import AdminEditManager from './pages/company-admin/managers/EditManager';
+import AdminManagerDetails from './pages/company-admin/managers/ManagerDetails';
+
+import AdminEmployeeList from './pages/company-admin/employees/EmployeeList';
+import AdminEmployeeDetails from './pages/company-admin/employees/EmployeeDetails';
+
+import AdminOrgList from './pages/company-admin/organizations/OrganizationList';
+import AdminCreateOrg from './pages/company-admin/organizations/CreateOrganization';
+import AdminEditOrg from './pages/company-admin/organizations/EditOrganization';
+import AdminOrgDetails from './pages/company-admin/organizations/OrganizationDetails';
+
+import AdminContactList from './pages/company-admin/contacts/ContactList';
+import AdminCreateContact from './pages/company-admin/contacts/CreateContact';
+import AdminEditContact from './pages/company-admin/contacts/EditContact';
+import AdminContactDetails from './pages/company-admin/contacts/ContactDetails';
+
+import AdminLeadList from './pages/company-admin/leads/LeadList';
+import AdminCreateLead from './pages/company-admin/leads/CreateLead';
+import AdminEditLead from './pages/company-admin/leads/EditLead';
+import AdminLeadDetails from './pages/company-admin/leads/LeadDetails';
+import AdminAssignLead from './pages/company-admin/leads/AssignLead';
+
+import AdminTaskList from './pages/company-admin/tasks/TaskList';
+import AdminCreateTask from './pages/company-admin/tasks/CreateTask';
+import AdminTaskDetails from './pages/company-admin/tasks/TaskDetails';
+
+import AdminFollowUpList from './pages/company-admin/followups/FollowUpList';
+import AdminCreateFollowUp from './pages/company-admin/followups/CreateFollowUp';
+
+import DashboardReports from './pages/company-admin/reports/DashboardReports';
+import LeadReports from './pages/company-admin/reports/LeadReports';
+import EmployeeReports from './pages/company-admin/reports/EmployeeReports';
+import ManagerReports from './pages/company-admin/reports/ManagerReports';
+
+import CurrentPlan from './pages/company-admin/subscription/CurrentPlan';
+import BillingHistory from './pages/company-admin/subscription/BillingHistory';
+import AdminNotifications from './pages/company-admin/notifications/Notifications';
+import CompanyProfile from './pages/company-admin/settings/CompanyProfile';
+import CompanySettings from './pages/company-admin/settings/CompanySettings';
+import AdminProfile from './pages/company-admin/profile/MyProfile';
+import AdminChangePassword from './pages/company-admin/profile/ChangePassword';
+
+// UI Playground
+import UIPlayground from './pages/playground/UIPlayground';
+
+// Manager Portal Shell Component for Interactive Manager Module
+function ManagerPortalShell() {
+  const [activePage, setActivePage] = useState('Dashboard');
+
+  const pageComponents = {
+    Dashboard: ManagerDashboard,
+    EmployeeList: ManagerEmployeeList,
+    CreateEmployee: ManagerCreateEmployee,
+    EmployeeDetails: ManagerEmployeeDetails,
+    EditEmployee: ManagerEditEmployee,
+    LeadList: ManagerLeadList,
+    LeadDetails: ManagerLeadDetails,
+    EditLead: ManagerEditLead,
+    AssignLead: ManagerAssignLead,
+    OrganizationList: ManagerOrgList,
+    OrganizationDetails: ManagerOrgDetails,
+    ContactList: ManagerContactList,
+    ContactDetails: ManagerContactDetails,
+    TaskList: ManagerTaskList,
+    CreateTask: ManagerCreateTask,
+    TaskDetails: ManagerTaskDetails,
+    FollowUpList: ManagerFollowUpList,
+    CreateFollowUp: ManagerCreateFollowUp,
+    TeamPerformanceReport: TeamPerformanceReport,
+    LeadReport: ManagerLeadReport,
+    Notifications: ManagerNotifications,
+    MyProfile: ManagerProfile,
+    ChangePassword: ManagerChangePassword,
+  };
+
+  const CurrentPageComponent = pageComponents[activePage] || ManagerDashboard;
+
+  return (
+    <ManagerLayout activePage={activePage} setActivePage={setActivePage}>
+      <CurrentPageComponent />
+    </ManagerLayout>
+  );
+}
+
+export function App() {
   return (
     <Router>
       <Routes>
@@ -48,7 +166,7 @@ function App() {
         <Route path="/subscription/success" element={<SubscriptionSuccessPage />} />
         <Route path="/subscription/failed" element={<SubscriptionFailedPage />} />
 
-        {/* Employee CRM Routes with Layout */}
+        {/* Employee CRM Routes */}
         <Route path="/crm" element={<CrmLayout />}>
           <Route index element={<EmployeeDashboard />} />
           <Route path="dashboard" element={<EmployeeDashboard />} />
@@ -66,6 +184,74 @@ function App() {
           <Route path="timeline" element={<ActivityTimelinePage />} />
           <Route path="profile" element={<ProfileNotificationsPage />} />
         </Route>
+
+        {/* Manager Module Route */}
+        <Route path="/manager" element={<ManagerPortalShell />} />
+
+        {/* Company Admin Module Routes */}
+        <Route path="/company-admin" element={<CompanyAdminLayout />}>
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+
+          {/* Managers */}
+          <Route path="managers" element={<AdminManagerList />} />
+          <Route path="managers/create" element={<AdminCreateManager />} />
+          <Route path="managers/:id" element={<AdminManagerDetails />} />
+          <Route path="managers/:id/edit" element={<AdminEditManager />} />
+
+          {/* Employees */}
+          <Route path="employees" element={<AdminEmployeeList />} />
+          <Route path="employees/:id" element={<AdminEmployeeDetails />} />
+
+          {/* Organizations */}
+          <Route path="organizations" element={<AdminOrgList />} />
+          <Route path="organizations/create" element={<AdminCreateOrg />} />
+          <Route path="organizations/:id" element={<AdminOrgDetails />} />
+          <Route path="organizations/:id/edit" element={<AdminEditOrg />} />
+
+          {/* Contacts */}
+          <Route path="contacts" element={<AdminContactList />} />
+          <Route path="contacts/create" element={<AdminCreateContact />} />
+          <Route path="contacts/:id" element={<AdminContactDetails />} />
+          <Route path="contacts/:id/edit" element={<AdminEditContact />} />
+
+          {/* Leads */}
+          <Route path="leads" element={<AdminLeadList />} />
+          <Route path="leads/create" element={<AdminCreateLead />} />
+          <Route path="leads/:id" element={<AdminLeadDetails />} />
+          <Route path="leads/:id/edit" element={<AdminEditLead />} />
+          <Route path="leads/:id/assign" element={<AdminAssignLead />} />
+
+          {/* Tasks */}
+          <Route path="tasks" element={<AdminTaskList />} />
+          <Route path="tasks/create" element={<AdminCreateTask />} />
+          <Route path="tasks/:id" element={<AdminTaskDetails />} />
+
+          {/* Follow-ups */}
+          <Route path="followups" element={<AdminFollowUpList />} />
+          <Route path="followups/create" element={<AdminCreateFollowUp />} />
+
+          {/* Reports */}
+          <Route path="reports" element={<DashboardReports />} />
+          <Route path="reports/dashboard" element={<DashboardReports />} />
+          <Route path="reports/leads" element={<LeadReports />} />
+          <Route path="reports/employees" element={<EmployeeReports />} />
+          <Route path="reports/managers" element={<ManagerReports />} />
+
+          {/* Subscription */}
+          <Route path="subscription" element={<CurrentPlan />} />
+          <Route path="subscription/billing-history" element={<BillingHistory />} />
+
+          {/* Notifications & Settings */}
+          <Route path="notifications" element={<AdminNotifications />} />
+          <Route path="settings/company-profile" element={<CompanyProfile />} />
+          <Route path="settings/company-settings" element={<CompanySettings />} />
+          <Route path="profile" element={<AdminProfile />} />
+          <Route path="profile/change-password" element={<AdminChangePassword />} />
+        </Route>
+
+        {/* UI Playground */}
+        <Route path="/ui-playground" element={<UIPlayground />} />
 
         {/* 404 Fallback */}
         <Route path="*" element={<NotFoundPage />} />
