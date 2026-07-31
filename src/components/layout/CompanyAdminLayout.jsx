@@ -9,7 +9,7 @@ export function CompanyAdminLayout({ children }) {
   const [activePage, setActivePage] = useState('Dashboard');
 
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans">
+    <div className="min-h-screen bg-slate-50 font-sans">
       <Sidebar
         collapsed={collapsed}
         toggleCollapse={() => setCollapsed(!collapsed)}
@@ -17,7 +17,7 @@ export function CompanyAdminLayout({ children }) {
         closeMobile={() => setMobileOpen(false)}
       />
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className={`transition-all duration-200 flex flex-col min-h-screen ${collapsed ? 'lg:pl-[72px]' : 'lg:pl-[260px]'}`}>
         <Topbar
           activePage={activePage}
           setActivePage={setActivePage}

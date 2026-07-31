@@ -81,12 +81,11 @@ export function Sidebar({ collapsed, toggleCollapse, mobileOpen, closeMobile }) 
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container - Fixed left */}
       <aside 
         className={`fixed inset-y-0 left-0 z-50 flex flex-col justify-between bg-neutral-900 text-neutral-300 border-r border-neutral-800 transition-all duration-200 ease-in-out
           ${collapsed ? 'w-[72px]' : 'w-[260px]'} 
-          ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          lg:static lg:h-screen`}
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Top Brand Logo Section */}
         <div>

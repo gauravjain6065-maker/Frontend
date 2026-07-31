@@ -5,19 +5,22 @@ import { Topbar } from './Topbar';
 
 export function ManagerLayout({ children, activePage = 'Dashboard', setActivePage }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       {/* Sidebar Navigation */}
       <Sidebar
+        collapsed={collapsed}
+        toggleCollapse={() => setCollapsed(!collapsed)}
         activePage={activePage}
         setActivePage={setActivePage}
-        isMobileOpen={isMobileOpen}
-        setIsMobileOpen={setIsMobileOpen}
+        mobileOpen={isMobileOpen}
+        closeMobile={() => setIsMobileOpen(false)}
       />
 
       {/* Main Content Area offset by Sidebar width on desktop */}
-      <div className="lg:pl-64 flex flex-col min-h-screen">
+      <div className={`transition-all duration-200 flex flex-col min-h-screen ${collapsed ? 'lg:pl-[72px]' : 'lg:pl-[260px]'}`}>
         {/* Top Navbar */}
         <Topbar
           activePage={activePage}
