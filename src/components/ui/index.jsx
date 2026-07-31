@@ -68,34 +68,88 @@ export const EmptyState = ({ title = 'No Data Found', description = 'Try adjusti
   </div>
 );
 
-export const DataTable = ({ columns = [], data = [], onRowClick }) => (
-  <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white">
-    <table className="w-full text-left text-xs text-gray-600">
-      <thead className="bg-gray-50 text-gray-700 font-semibold border-b border-gray-200 uppercase text-[10px] tracking-wider">
-        <tr>
-          {columns.map((col, idx) => (
-            <th key={idx} className="px-4 py-3">{col.header || col.name || col}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-100">
-        {data.map((row, rowIdx) => (
-          <tr 
-            key={rowIdx} 
-            onClick={() => onRowClick && onRowClick(row)} 
-            className="hover:bg-gray-50 transition cursor-pointer"
-          >
-            {columns.map((col, colIdx) => (
-              <td key={colIdx} className="px-4 py-3">
-                {col.render ? col.render(row) : row[col.accessor || col.key || col]}
-              </td>
-            ))}
+export const DataTable = ({ 
+  columns = [], 
+  data = [], 
+  loading = false, 
+  onRowClick, 
+  actions, 
+  sortColumn, 
+  sortDirection, 
+  onSort 
+}) => {
+  if (loading) {
+    return (
+      <div className="p-8 text-center bg-white border border-gray-200 rounded-xl">
+        <div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-xs text-gray-500 mt-2 font-medium">Loading records...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto border border-gray-200 rounded-xl bg-white shadow-xs">
+      <table className="w-full text-left text-xs text-gray-600">
+        <thead className="bg-gray-50 text-gray-700 font-semibold border-b border-gray-200 uppercase text-[10px] tracking-wider">
+          <tr>
+            {columns.map((col, idx) => {
+              const label = typeof col === 'string' ? col : col.label || col.header || col.name || col.title || col.key || '';
+              const isSortable = col.sortable !== false;
+              const isSorted = sortColumn && (sortColumn === col.key || sortColumn === col.accessor || sortColumn === col.accessorKey);
+              return (
+                <th 
+                  key={idx} 
+                  onClick={() => onSort && isSortable && onSort(col.key || col.accessor || col.accessorKey)}
+                  className={`px-4 py-3 ${onSort && isSortable ? 'cursor-pointer hover:bg-gray-100' : ''}`}
+                >
+                  <div className="flex items-center gap-1">
+                    <span>{label}</span>
+                    {isSorted && (
+                      <span className="text-blue-600 font-bold">{sortDirection === 'desc' ? '↓' : '↑'}</span>
+                    )}
+                  </div>
+                </th>
+              );
+            })}
+            {actions && <th className="px-4 py-3 text-right">Actions</th>}
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {data.length > 0 ? (
+            data.map((row, rowIdx) => (
+              <tr 
+                key={row.id || rowIdx} 
+                onClick={() => onRowClick && onRowClick(row)} 
+                className="hover:bg-gray-50/80 transition cursor-pointer"
+              >
+                {columns.map((col, colIdx) => {
+                  const keyName = typeof col === 'string' ? col : col.key || col.accessor || col.accessorKey;
+                  const val = row && keyName ? row[keyName] : undefined;
+                  return (
+                    <td key={colIdx} className="px-4 py-3">
+                      {col.render ? col.render(val, row, rowIdx) : (val !== undefined && val !== null ? String(val) : '')}
+                    </td>
+                  );
+                })}
+                {actions && (
+                  <td className="px-4 py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    {typeof actions === 'function' ? actions(row) : actions}
+                  </td>
+                )}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={columns.length + (actions ? 1 : 0)} className="px-4 py-8 text-center text-gray-500">
+                No records found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 export const ChartPlaceholder = ({ title = 'Chart Representation' }) => (
   <div className="h-64 bg-gray-50 border border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 text-xs">
