@@ -10,11 +10,14 @@ import {
   TrendingUp, 
   UserPlus, 
   PlusCircle, 
-  ArrowUpRight, 
   Clock, 
   PhoneCall, 
-  Building2 
+  Building2,
+  Flame,
+  BarChart3,
+  Award
 } from 'lucide-react';
+import { TEAM_PERFORMANCE_SUMMARY } from '../../mock/dashboard/dashboardMock';
 
 export function Dashboard({ onNavigate }) {
   const navigate = (page) => {
@@ -25,34 +28,21 @@ export function Dashboard({ onNavigate }) {
     { title: 'Total Team Members', value: '14', change: '+2 this month', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', page: 'EmployeeList' },
     { title: 'Active Team Leads', value: '128', change: '+12% vs last week', icon: Target, color: 'text-amber-600', bg: 'bg-amber-50', page: 'LeadList' },
     { title: 'Pending Tasks', value: '34', change: '8 high priority', icon: CheckSquare, color: 'text-red-600', bg: 'bg-red-50', page: 'TaskList' },
-    { title: 'Monthly Revenue', value: '$245,800', change: '+18.4% target', icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50', page: 'TeamPerformanceReport' },
-  ];
-
-  const recentActivities = [
-    { id: 1, user: 'Sarah Jenkins', action: 'Closed deal with Acme Corp ($45,000)', time: '10 mins ago', page: 'LeadDetails' },
-    { id: 2, user: 'Michael Brown', action: 'Assigned 5 new leads to Alex Rivera', time: '45 mins ago', page: 'AssignLead' },
-    { id: 3, user: 'David Kim', action: 'Scheduled follow-up with TechGlobal', time: '2 hours ago', page: 'FollowUpList' },
-    { id: 4, user: 'Jessica Taylor', action: 'Updated status for Lead #4092 to Contacted', time: '3 hours ago', page: 'LeadList' },
-  ];
-
-  const pendingTasks = [
-    { id: 1, title: 'Review Q3 Team Targets', assignedTo: 'Self', dueDate: 'Today, 5:00 PM', priority: 'High' },
-    { id: 2, title: 'Approve Enterprise Lead Allocation', assignedTo: 'Sarah Jenkins', dueDate: 'Tomorrow', priority: 'Medium' },
-    { id: 3, title: 'Client Onboarding Sync with Apex Inc', assignedTo: 'David Kim', dueDate: 'Aug 02, 2026', priority: 'High' },
+    { title: 'Monthly Revenue', value: '$1,240,000', change: '+18.4% target', icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50', page: 'TeamPerformanceReport' },
   ];
 
   const teamMembers = [
-    { name: 'Sarah Jenkins', role: 'Senior Rep', leads: 24, deals: 8, performance: '94%' },
-    { name: 'Alex Rivera', role: 'Account Exec', leads: 19, deals: 5, performance: '88%' },
-    { name: 'David Kim', role: 'Sales Exec', leads: 22, deals: 6, performance: '91%' },
-    { name: 'Emily Zhang', role: 'Junior Rep', leads: 15, deals: 3, performance: '82%' },
+    { name: 'Agent Smith', role: 'Senior Rep', leads: 22, deals: 15, performance: '105%' },
+    { name: 'Thomas Anderson', role: 'Representative', leads: 11, deals: 6, performance: '88%' },
+    { name: 'Trinity Bell', role: 'Representative', leads: 18, deals: 12, performance: '98%' },
+    { name: 'Cypher Reagan', role: 'Representative', leads: 0, deals: 0, performance: '45%' },
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-slate-50 min-h-screen font-sans">
       <PageHeader
-        title="Manager Dashboard"
-        subtitle="Overview of team performance, lead distribution, and key sales metrics."
+        title="Manager Performance Dashboard"
+        subtitle="Overview of team performance, revenue funnel, and sales execution targets."
         actions={
           <>
             <Button variant="secondary" icon={UserPlus} onClick={() => navigate('CreateEmployee')}>Add Member</Button>
@@ -82,125 +72,151 @@ export function Dashboard({ onNavigate }) {
         })}
       </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Team Overview */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card title="Team Overview" subtitle="Current workload and conversion metrics for active representatives.">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 text-xs font-semibold text-gray-500">
-                    <th className="pb-3">Representative</th>
-                    <th className="pb-3">Role</th>
-                    <th className="pb-3">Active Leads</th>
-                    <th className="pb-3">Deals Closed</th>
-                    <th className="pb-3 text-right">Quota Met</th>
+      {/* 3 Custom Performance Widgets */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        {/* Widget 1: Hot Leads */}
+        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold">
+                <Flame className="w-5 h-5 fill-red-500 text-red-500" />
+              </div>
+              <h3 className="font-bold text-gray-900 text-sm">Hot Prospects Queue</h3>
+            </div>
+            <span className="bg-red-100 text-red-700 font-extrabold text-xs px-2.5 py-0.5 rounded-full">
+              {TEAM_PERFORMANCE_SUMMARY.totalHotLeads} Hot
+            </span>
+          </div>
+
+          <div className="mt-4 space-y-2.5">
+            <div className="p-2.5 bg-red-50/50 rounded-xl border border-red-100 flex items-center justify-between text-xs">
+              <span className="font-bold text-gray-800">Sarah Jenkins (Acme Corp)</span>
+              <span className="font-mono text-red-600 font-bold">$240,000</span>
+            </div>
+            <div className="p-2.5 bg-red-50/50 rounded-xl border border-red-100 flex items-center justify-between text-xs">
+              <span className="font-bold text-gray-800">Carlos Mendez (Solaris)</span>
+              <span className="font-mono text-red-600 font-bold">$520,000</span>
+            </div>
+            <div className="p-2.5 bg-red-50/50 rounded-xl border border-red-100 flex items-center justify-between text-xs">
+              <span className="font-bold text-gray-800">Jessica Taylor (Logistics)</span>
+              <span className="font-mono text-red-600 font-bold">$180,000</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Widget 2: Revenue Funnel Overview */}
+        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <BarChart3 className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-gray-900 text-sm">Revenue Funnel Overview</h3>
+            </div>
+            <span className="text-xs text-blue-600 font-bold">3 Stage Funnel</span>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            <div>
+              <div className="flex justify-between text-xs font-semibold mb-1">
+                <span className="text-gray-500">1. Total Lead Pipeline</span>
+                <span className="text-gray-900">$3,450,000</span>
+              </div>
+              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-slate-700 h-full rounded-full" style={{ width: '100%' }} />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-xs font-semibold mb-1">
+                <span className="text-gray-500">2. Open Deals Value</span>
+                <span className="text-blue-600 font-bold">$2,100,000</span>
+              </div>
+              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-blue-600 h-full rounded-full" style={{ width: '60%' }} />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between text-xs font-semibold mb-1">
+                <span className="text-gray-500">3. Closed Won Revenue</span>
+                <span className="text-green-600 font-bold">$1,240,000</span>
+              </div>
+              <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div className="bg-green-500 h-full rounded-full" style={{ width: '36%' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Widget 3: Manager vs Target Gauge */}
+        <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                <Award className="w-5 h-5" />
+              </div>
+              <h3 className="font-bold text-gray-900 text-sm">Manager vs Revenue Target</h3>
+            </div>
+            <span className="bg-purple-100 text-purple-700 font-extrabold text-xs px-2.5 py-0.5 rounded-full">
+              {TEAM_PERFORMANCE_SUMMARY.managerTarget.percentage}% Achieved
+            </span>
+          </div>
+
+          <div className="mt-4 flex flex-col items-center text-center">
+            <div className="text-3xl font-black text-gray-900">
+              ${(TEAM_PERFORMANCE_SUMMARY.managerTarget.achieved / 1000000).toFixed(2)}M
+              <span className="text-xs font-medium text-gray-400"> / ${(TEAM_PERFORMANCE_SUMMARY.managerTarget.target / 1000000).toFixed(1)}M</span>
+            </div>
+            <p className="text-xs text-gray-500 mt-1 font-medium font-sans">Monthly Quota Goal</p>
+
+            <div className="w-full bg-gray-100 h-3 rounded-full overflow-hidden mt-4">
+              <div className="bg-gradient-to-r from-purple-500 to-blue-600 h-full rounded-full" style={{ width: `${TEAM_PERFORMANCE_SUMMARY.managerTarget.percentage}%` }} />
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Team Workload Table */}
+      <div className="grid grid-cols-1 gap-6">
+        <Card title="Direct Team Performance Workload" subtitle="Current workload and conversion metrics for active telecallers.">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-gray-200 text-xs font-semibold text-gray-500">
+                  <th className="pb-3">Representative</th>
+                  <th className="pb-3">Role</th>
+                  <th className="pb-3">Active Leads</th>
+                  <th className="pb-3">Deals Closed</th>
+                  <th className="pb-3 text-right">Quota Met</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {teamMembers.map((member, idx) => (
+                  <tr
+                    key={idx}
+                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => navigate('EmployeeDetails')}
+                  >
+                    <td className="py-3 font-medium text-blue-600">{member.name}</td>
+                    <td className="py-3 text-gray-500 text-xs">{member.role}</td>
+                    <td className="py-3 text-gray-700">{member.leads}</td>
+                    <td className="py-3 text-gray-700">{member.deals}</td>
+                    <td className="py-3 text-right">
+                      <Badge variant={parseInt(member.performance) >= 90 ? 'success' : 'warning'}>
+                        {member.performance}
+                      </Badge>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {teamMembers.map((member, idx) => (
-                    <tr
-                      key={idx}
-                      className="hover:bg-gray-50 cursor-pointer transition-colors"
-                      onClick={() => navigate('EmployeeDetails')}
-                    >
-                      <td className="py-3 font-medium text-blue-600">{member.name}</td>
-                      <td className="py-3 text-gray-500 text-xs">{member.role}</td>
-                      <td className="py-3 text-gray-700">{member.leads}</td>
-                      <td className="py-3 text-gray-700">{member.deals}</td>
-                      <td className="py-3 text-right">
-                        <Badge variant={parseInt(member.performance) >= 90 ? 'success' : 'warning'}>
-                          {member.performance}
-                        </Badge>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Card>
-
-          {/* Pending Tasks */}
-          <Card title="Pending Manager Tasks" subtitle="Action items requiring your immediate review.">
-            <div className="space-y-3">
-              {pendingTasks.map((task) => (
-                <div
-                  key={task.id}
-                  onClick={() => navigate('TaskDetails')}
-                  className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <CheckSquare className="w-5 h-5 text-blue-600 mt-0.5" />
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-900">{task.title}</h4>
-                      <p className="text-xs text-gray-500">Assigned: {task.assignedTo} • Due: {task.dueDate}</p>
-                    </div>
-                  </div>
-                  <Badge variant={task.priority === 'High' ? 'danger' : 'warning'}>
-                    {task.priority}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-        {/* Sidebar Column: Quick Actions & Recent Activity */}
-        <div className="space-y-6">
-          <Card title="Quick Actions">
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => navigate('CreateEmployee')}
-                className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors text-center"
-              >
-                <UserPlus className="w-5 h-5 text-blue-600 mb-1" />
-                <span className="text-xs font-medium text-gray-800">Add Employee</span>
-              </button>
-              <button
-                onClick={() => navigate('AssignLead')}
-                className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors text-center"
-              >
-                <Target className="w-5 h-5 text-blue-600 mb-1" />
-                <span className="text-xs font-medium text-gray-800">Assign Lead</span>
-              </button>
-              <button
-                onClick={() => navigate('OrganizationList')}
-                className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors text-center"
-              >
-                <Building2 className="w-5 h-5 text-blue-600 mb-1" />
-                <span className="text-xs font-medium text-gray-800">New Org</span>
-              </button>
-              <button
-                onClick={() => navigate('CreateFollowUp')}
-                className="flex flex-col items-center justify-center p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-200 cursor-pointer transition-colors text-center"
-              >
-                <PhoneCall className="w-5 h-5 text-blue-600 mb-1" />
-                <span className="text-xs font-medium text-gray-800">Schedule Call</span>
-              </button>
-            </div>
-          </Card>
-
-          <Card title="Recent Activity" subtitle="Live updates across your team.">
-            <div className="space-y-4">
-              {recentActivities.map((act) => (
-                <div
-                  key={act.id}
-                  onClick={() => navigate(act.page)}
-                  className="flex items-start gap-3 text-xs cursor-pointer hover:bg-gray-50 p-1.5 rounded-lg transition-colors"
-                >
-                  <div className="w-2 h-2 rounded-full bg-blue-600 mt-1.5 shrink-0" />
-                  <div>
-                    <p className="text-gray-800 font-medium">{act.user}</p>
-                    <p className="text-gray-600">{act.action}</p>
-                    <span className="text-gray-400 text-[11px] mt-0.5 block">{act.time}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       </div>
     </div>
   );
 }
+export default Dashboard;

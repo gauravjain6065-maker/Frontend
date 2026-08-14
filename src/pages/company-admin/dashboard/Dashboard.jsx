@@ -10,23 +10,22 @@ import {
   Mail, 
   CheckCircle, 
   Bell, 
-  ArrowUpDown, 
   ChevronRight,
   TrendingUp,
   FileText,
   Clock,
   Phone,
-  Briefcase
+  Flame,
+  Target,
+  BarChart3,
+  Filter
 } from 'lucide-react';
 
 import {
   PageContainer,
   PageHeader,
-  Section,
   Card,
-  Grid,
-  Stack,
-  Divider
+  Stack
 } from '../../../components/layout';
 
 import {
@@ -34,9 +33,7 @@ import {
   ActivityCard,
   NotificationCard,
   DataTable,
-  Badge,
   StatusBadge,
-  ChartPlaceholder,
   Button,
   Modal,
   Input,
@@ -51,10 +48,10 @@ import {
   TODAY_FOLLOWUPS,
   RECENT_ACTIVITIES,
   NOTIFICATIONS,
-  QUICK_ACTIONS
+  QUICK_ACTIONS,
+  TEAM_PERFORMANCE_SUMMARY
 } from '../../../mock/dashboard/dashboardMock';
 
-// Simple internal helper component for generating circular initial badges in tables
 const AvatarMock = ({ name }) => {
   const getInitials = (n) => {
     if (!n) return '?';
@@ -63,13 +60,12 @@ const AvatarMock = ({ name }) => {
   };
 
   return (
-    <div className="w-8 h-8 rounded-full bg-primary-100 border border-primary-200 text-primary-700 flex items-center justify-center font-bold text-[10px] select-none flex-shrink-0">
+    <div className="w-8 h-8 rounded-full bg-blue-100 border border-blue-200 text-blue-700 flex items-center justify-center font-bold text-[10px] select-none flex-shrink-0">
       {getInitials(name)}
     </div>
   );
 };
 
-// Icon mapping dictionary to resolve string names from mock files
 const iconMap = {
   DollarSign,
   Users,
@@ -84,32 +80,14 @@ const iconMap = {
 };
 
 export default function Dashboard() {
-  // Modal toggle states
   const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
   const [isOrgModalOpen, setIsOrgModalOpen] = useState(false);
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-
-  // DataTable State
   const [tableData, setTableData] = useState(RECENT_LEADS);
   const [sortColumn, setSortColumn] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
-  const [tableLoading, setTableLoading] = useState(false);
 
-  // Form input states (for demonstration inside modals)
-  const [leadName, setLeadName] = useState('');
-  const [leadCompany, setLeadCompany] = useState('');
-  const [leadStatus, setLeadStatus] = useState('Active');
-  
-  const [orgName, setOrgName] = useState('');
-  const [orgIndustry, setOrgIndustry] = useState('');
+  const crumbs = [{ label: 'Dashboard' }];
 
-  // Breadcrumb structure
-  const crumbs = [
-    { label: 'Dashboard' }
-  ];
-
-  // DataTable columns config
   const tableColumns = [
     { 
       key: 'name', 
@@ -137,257 +115,27 @@ export default function Dashboard() {
       label: 'Created Date', 
       sortable: true,
       render: (val) => (
-        <span className="text-[10px] font-semibold text-neutral-500">
-          {val}
-        </span>
+        <span className="text-[10px] font-semibold text-neutral-500">{val}</span>
       )
     }
   ];
 
-  // Sorting handler
-  const handleSort = (columnKey) => {
-    const isSameCol = sortColumn === columnKey;
-    const direction = isSameCol && sortDirection === 'asc' ? 'desc' : 'asc';
-    setSortColumn(columnKey);
-    setSortDirection(direction);
-    setTableLoading(true);
-
-    setTimeout(() => {
-      const sorted = [...tableData].sort((a, b) => {
-        const valA = String(a[columnKey]).toLowerCase();
-        const valB = String(b[columnKey]).toLowerCase();
-        return direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-      });
-      setTableData(sorted);
-      setTableLoading(false);
-    }, 450);
-  };
-
-  // Mock Form Submit Handlers
-  const handleCreateLead = (e) => {
-    e.preventDefault();
-    if (!leadName || !leadCompany) {
-      alert('Please fill out the required fields.');
-      return;
-    }
-    const newLead = {
-      id: tableData.length + 1,
-      name: leadName,
-      company: leadCompany,
-      owner: 'Raj Sonar',
-      status: leadStatus,
-      date: new Date().toISOString().split('T')[0]
-    };
-    setTableData([newLead, ...tableData]);
-    setLeadName('');
-    setLeadCompany('');
-    setIsLeadModalOpen(false);
-    alert(`Lead "${newLead.name}" has been created successfully.`);
-  };
-
-  const handleCreateOrg = (e) => {
-    e.preventDefault();
-    if (!orgName) {
-      alert('Please enter an organization name.');
-      return;
-    }
-    setIsOrgModalOpen(false);
-    setOrgName('');
-    setOrgIndustry('');
-    alert(`Organization "${orgName}" added to directory.`);
-  };
-
-  const handleQuickAction = (key) => {
-    switch (key) {
-      case 'create-lead':
-        setIsLeadModalOpen(true);
-        break;
-      case 'create-org':
-        setIsOrgModalOpen(true);
-        break;
-      case 'create-contact':
-        setIsContactModalOpen(true);
-        break;
-      case 'create-task':
-        setIsTaskModalOpen(true);
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
     <PageContainer fluid padding="p-5" className="bg-[#F8FAFC]">
-      
-      {/* ====================================================
-          MODALS & OVERLAYS 
-          ==================================================== */}
-      {/* Create Lead Modal */}
-      <Modal
-        isOpen={isLeadModalOpen}
-        onClose={() => setIsLeadModalOpen(false)}
-        title="Create New CRM Lead"
-        footer={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => setIsLeadModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" size="sm" onClick={handleCreateLead}>
-              Create Lead
-            </Button>
-          </>
-        }
-      >
-        <Stack space={4}>
-          <Input 
-            label="Lead Name" 
-            required 
-            placeholder="E.g., Bruce Wayne" 
-            value={leadName} 
-            onChange={(e) => setLeadName(e.target.value)}
-          />
-          <Input 
-            label="Organization / Company" 
-            required 
-            placeholder="E.g., Wayne Enterprises" 
-            value={leadCompany} 
-            onChange={(e) => setLeadCompany(e.target.value)}
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <Select 
-              label="Pipeline Status" 
-              options={['Active', 'Inactive', 'Suspended', 'Pending']} 
-              value={leadStatus}
-              onChange={(e) => setLeadStatus(e.target.value)}
-            />
-            <DatePicker label="Estimated Deal Close" />
-          </div>
-        </Stack>
-      </Modal>
-
-      {/* Create Organization Modal */}
-      <Modal
-        isOpen={isOrgModalOpen}
-        onClose={() => setIsOrgModalOpen(false)}
-        title="Add Organization Account"
-        footer={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => setIsOrgModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" size="sm" onClick={handleCreateOrg}>
-              Save Organization
-            </Button>
-          </>
-        }
-      >
-        <Stack space={4}>
-          <Input 
-            label="Organization Name" 
-            required 
-            placeholder="E.g., LexCorp" 
-            value={orgName} 
-            onChange={(e) => setOrgName(e.target.value)}
-          />
-          <Select 
-            label="Industry Sector" 
-            options={['Technology', 'Biotech', 'Finance', 'Manufacturing', 'Logistics']} 
-            value={orgIndustry}
-            onChange={(e) => setOrgIndustry(e.target.value)}
-          />
-          <Input label="Headquarters Location" placeholder="E.g., Metropolis, USA" />
-        </Stack>
-      </Modal>
-
-      {/* Create Contact Modal */}
-      <Modal
-        isOpen={isContactModalOpen}
-        onClose={() => setIsContactModalOpen(false)}
-        title="Add Contact Person"
-        footer={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => setIsContactModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" size="sm" onClick={() => setIsContactModalOpen(false)}>
-              Save Contact
-            </Button>
-          </>
-        }
-      >
-        <Stack space={4}>
-          <div className="grid grid-cols-2 gap-4">
-            <Input label="First Name" required placeholder="Clark" />
-            <Input label="Last Name" required placeholder="Kent" />
-          </div>
-          <Input label="Email Address" type="email" placeholder="clark.kent@dailyplanet.com" />
-          <Input label="Select Associated Organization" placeholder="Search organization..." />
-        </Stack>
-      </Modal>
-
-      {/* Create Task Modal */}
-      <Modal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-        title="Schedule CRM Action Task"
-        footer={
-          <>
-            <Button variant="secondary" size="sm" onClick={() => setIsTaskModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" size="sm" onClick={() => setIsTaskModalOpen(false)}>
-              Add Task
-            </Button>
-          </>
-        }
-      >
-        <Stack space={4}>
-          <Input label="Task Subject" required placeholder="E.g., Send pricing schedule" />
-          <div className="grid grid-cols-2 gap-4">
-            <DatePicker label="Due Date" required />
-            <Select label="Task Priority" options={['Low', 'Normal', 'High', 'Urgent']} placeholder="Select Priority" />
-          </div>
-          <Textarea label="Instructions" placeholder="Describe specific actions needed..." />
-        </Stack>
-      </Modal>
-
-      {/* ====================================================
-          DASHBOARD GRID CONTAINER
-          ==================================================== */}
       <div className="grid grid-cols-1 gap-5">
         
         {/* Top Header */}
         <PageHeader
-          title="Dashboard"
+          title="Executive Dashboard"
           description={
             <span>
-              Welcome back, <strong className="text-neutral-800 font-bold">Raj</strong>. Here's what's happening inside your CRM today.
+              Welcome back, <strong className="text-neutral-800 font-bold">Admin</strong>. Overview of sales performance, revenue funnel, and team targets.
             </span>
           }
           breadcrumbs={crumbs}
-          actions={
-            <>
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                leadingIcon={Plus} 
-                onClick={() => setIsOrgModalOpen(true)}
-              >
-                Create Organization
-              </Button>
-              <Button 
-                variant="primary" 
-                size="sm" 
-                leadingIcon={Plus} 
-                onClick={() => setIsLeadModalOpen(true)}
-              >
-                Create Lead
-              </Button>
-            </>
-          }
         />
 
-        {/* Row 1: 4 KPI Cards */}
+        {/* Row 1: KPI Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
           {KPI_STATS.map((stat) => {
             const StatIcon = iconMap[stat.iconName] || DollarSign;
@@ -405,148 +153,120 @@ export default function Dashboard() {
           })}
         </div>
 
-        {/* Row 2: Lead Pipeline (8 cols) & Today's Followups (4 cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* Lead Pipeline */}
-          <div className="lg:col-span-8 flex flex-col">
-            <Card title="Lead Generation Trends" className="flex-1">
-              <ChartPlaceholder type="area" height={260} />
-            </Card>
-          </div>
-
-          {/* Today's Followups */}
-          <div className="lg:col-span-4 flex flex-col">
-            <Card title="Today's Followups" className="flex-1" footer={
-              <button 
-                onClick={() => setIsTaskModalOpen(true)}
-                className="text-xs font-semibold text-primary-600 hover:text-primary-700 bg-transparent border-0 cursor-pointer flex items-center gap-1 focus:outline-none"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Schedule New Task
-              </button>
-            }>
-              <Stack space={3.5} className="max-h-[260px] overflow-y-auto crm-scrollbar pr-1">
-                {TODAY_FOLLOWUPS.map((item) => (
-                  <div 
-                    key={item.id} 
-                    className="p-3 bg-neutral-100/60 hover:bg-neutral-100 border border-neutral-200 rounded-lg flex items-start gap-3 transition-colors text-xs select-none"
-                  >
-                    <div className="p-2 bg-white rounded-md text-primary-600 border border-neutral-200 flex-shrink-0 flex items-center justify-center">
-                      {item.type === 'Call' ? (
-                        <Phone className="w-3.5 h-3.5" />
-                      ) : item.type === 'Meeting' ? (
-                        <Users className="w-3.5 h-3.5" />
-                      ) : (
-                        <FileText className="w-3.5 h-3.5" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-neutral-800 truncate">{item.title}</span>
-                        <span className="text-[10px] text-neutral-400 font-semibold flex items-center gap-0.5 flex-shrink-0">
-                          <Clock className="w-2.5 h-2.5" />
-                          {item.time}
-                        </span>
-                      </div>
-                      <p className="text-neutral-500 mt-1 truncate">Client: {item.clientName}</p>
-                    </div>
-                  </div>
-                ))}
-              </Stack>
-            </Card>
-          </div>
-        </div>
-
-        {/* Row 3: Recent Leads Table (8 cols) & Quick Actions (4 cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* Recent Leads Table */}
-          <div className="lg:col-span-8 flex flex-col">
-            <Card title="Recent Lead Pipeline Submissions" className="flex-1">
-              <DataTable
-                columns={tableColumns}
-                data={tableData}
-                loading={tableLoading}
-                sortColumn={sortColumn}
-                sortDirection={sortDirection}
-                onSort={handleSort}
-                onRowClick={(row) => alert(`Selected Row Detail Profile: ${row.name} (${row.company})`)}
-              />
-            </Card>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="lg:col-span-4 flex flex-col">
-            <Card title="Dashboard Quick Commands" className="flex-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
-                {QUICK_ACTIONS.map((action) => {
-                  const ActionIcon = iconMap[action.iconName] || Plus;
-                  return (
-                    <div
-                      key={action.id}
-                      onClick={() => handleQuickAction(action.actionKey)}
-                      className="p-4 border border-neutral-200 rounded-xl hover:border-primary-300 hover:shadow-sm group select-none flex flex-col justify-between cursor-pointer transition-all bg-white"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="p-2.5 bg-primary-50 text-primary-600 rounded-lg group-hover:bg-primary-500 group-hover:text-white transition-colors duration-150">
-                          <ActionIcon className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-xs font-bold text-neutral-800 group-hover:text-primary-600 transition-colors">
-                            {action.title}
-                          </h4>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-end text-primary-600 group-hover:translate-x-1.5 transition-transform duration-150">
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </div>
-                    </div>
-                  );
-                })}
+        {/* Row 2: 3 Custom Performance Widgets (Hot Leads, Revenue Funnel, Manager vs Target) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          
+          {/* Widget 1: Hot Leads */}
+          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold">
+                  <Flame className="w-5 h-5 fill-red-500 text-red-500" />
+                </div>
+                <h3 className="font-bold text-gray-900 text-sm">Hot Prospects Queue</h3>
               </div>
-            </Card>
+              <span className="bg-red-100 text-red-700 font-extrabold text-xs px-2.5 py-0.5 rounded-full">
+                {TEAM_PERFORMANCE_SUMMARY.totalHotLeads} Hot
+              </span>
+            </div>
+
+            <div className="mt-4 space-y-2.5">
+              <div className="p-2.5 bg-red-50/50 rounded-xl border border-red-100 flex items-center justify-between text-xs">
+                <span className="font-bold text-gray-800">Sarah Jenkins (Acme Corp)</span>
+                <span className="font-mono text-red-600 font-bold">$240,000</span>
+              </div>
+              <div className="p-2.5 bg-red-50/50 rounded-xl border border-red-100 flex items-center justify-between text-xs">
+                <span className="font-bold text-gray-800">Carlos Mendez (Solaris)</span>
+                <span className="font-mono text-red-600 font-bold">$520,000</span>
+              </div>
+              <div className="p-2.5 bg-red-50/50 rounded-xl border border-red-100 flex items-center justify-between text-xs">
+                <span className="font-bold text-gray-800">Jessica Taylor (Logistics)</span>
+                <span className="font-mono text-red-600 font-bold">$180,000</span>
+              </div>
+            </div>
           </div>
+
+          {/* Widget 2: Revenue Funnel */}
+          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                  <BarChart3 className="w-5 h-5" />
+                </div>
+                <h3 className="font-bold text-gray-900 text-sm">Revenue Funnel Overview</h3>
+              </div>
+              <span className="text-xs text-blue-600 font-bold">3 Stage Funnel</span>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              <div>
+                <div className="flex justify-between text-xs font-semibold mb-1">
+                  <span className="text-gray-500">1. Total Lead Pipeline</span>
+                  <span className="text-gray-900">$3,450,000</span>
+                </div>
+                <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div className="bg-slate-700 h-full rounded-full" style={{ width: '100%' }} />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs font-semibold mb-1">
+                  <span className="text-gray-500">2. Open Deals Value</span>
+                  <span className="text-blue-600 font-bold">$2,100,000</span>
+                </div>
+                <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div className="bg-blue-600 h-full rounded-full" style={{ width: '60%' }} />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs font-semibold mb-1">
+                  <span className="text-gray-500">3. Closed Won Revenue</span>
+                  <span className="text-green-600 font-bold">$1,240,000</span>
+                </div>
+                <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                  <div className="bg-green-500 h-full rounded-full" style={{ width: '36%' }} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Widget 3: Manager vs Target Gauge */}
+          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                  <Target className="w-5 h-5" />
+                </div>
+                <h3 className="font-bold text-gray-900 text-sm">Manager vs Monthly Target</h3>
+              </div>
+              <span className="bg-purple-100 text-purple-700 font-extrabold text-xs px-2.5 py-0.5 rounded-full">
+                {TEAM_PERFORMANCE_SUMMARY.managerTarget.percentage}% Achieved
+              </span>
+            </div>
+
+            <div className="mt-4 flex flex-col items-center text-center">
+              <div className="text-3xl font-black text-gray-900">
+                ${(TEAM_PERFORMANCE_SUMMARY.managerTarget.achieved / 1000000).toFixed(2)}M
+                <span className="text-xs font-medium text-gray-400"> / ${(TEAM_PERFORMANCE_SUMMARY.managerTarget.target / 1000000).toFixed(1)}M</span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1 font-medium">Team Quota Progress</p>
+
+              <div className="w-full bg-gray-100 h-3 rounded-full overflow-hidden mt-4">
+                <div className="bg-gradient-to-r from-purple-500 to-blue-600 h-full rounded-full" style={{ width: `${TEAM_PERFORMANCE_SUMMARY.managerTarget.percentage}%` }} />
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* Row 4: Recent Activities (6 cols) & Notifications (6 cols) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Recent Activities */}
-          <Card title="Log Timeline Activity">
-            <div className="pl-1 pt-1 max-h-[300px] overflow-y-auto crm-scrollbar">
-              {RECENT_ACTIVITIES.map((act, idx) => {
-                const ActIcon = iconMap[act.iconName] || Plus;
-                return (
-                  <ActivityCard
-                    key={act.id}
-                    title={act.title}
-                    description={act.description}
-                    time={act.time}
-                    icon={ActIcon}
-                    variant={act.variant}
-                    isLast={idx === RECENT_ACTIVITIES.length - 1}
-                  />
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Notifications */}
-          <Card title="System Alerts Inbox">
-            <Stack space={3} className="max-h-[300px] overflow-y-auto crm-scrollbar pr-1">
-              {NOTIFICATIONS.map((item) => {
-                const NoteIcon = iconMap[item.iconName] || Bell;
-                return (
-                  <NotificationCard
-                    key={item.id}
-                    title={item.title}
-                    description={item.description}
-                    time={item.time}
-                    unread={item.unread}
-                    icon={NoteIcon}
-                    variant={item.variant}
-                  />
-                );
-              })}
-            </Stack>
+        {/* Row 3: Recent Leads Table */}
+        <div className="grid grid-cols-1 gap-5">
+          <Card title="Recent Lead Submissions">
+            <DataTable
+              columns={tableColumns}
+              data={tableData}
+            />
           </Card>
         </div>
 

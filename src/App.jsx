@@ -36,6 +36,9 @@ import {
   ProfileNotificationsPage
 } from './pages/crm';
 
+import TodayView from './pages/crm/today/TodayView';
+import MyDealsPage from './pages/crm/deals/MyDealsPage';
+
 // Manager Pages
 import {
   Dashboard as ManagerDashboard,
@@ -62,6 +65,8 @@ import {
   MyProfile as ManagerProfile,
   ChangePassword as ManagerChangePassword
 } from './pages/manager';
+
+import TeamDealsPage from './pages/manager/deals/TeamDealsPage';
 
 // Company Admin Pages
 import AdminDashboard from './pages/company-admin/dashboard/Dashboard';
@@ -136,18 +141,31 @@ export function App() {
         <Route path="/organizations" element={<Navigate to="/admin/organizations" replace />} />
         <Route path="/contacts" element={<Navigate to="/admin/contacts" replace />} />
 
+        {/* Specific /app/* routes requested */}
+        <Route path="/app/pipeline" element={<CrmLayout />}>
+          <Route index element={<MyLeadsPage />} />
+        </Route>
+        <Route path="/app/today" element={<CrmLayout />}>
+          <Route index element={<TodayView />} />
+        </Route>
+        <Route path="/app/deals" element={<CrmLayout />}>
+          <Route index element={<MyDealsPage />} />
+        </Route>
+        <Route path="/app/team-deals" element={<ManagerLayout />}>
+          <Route index element={<TeamDealsPage />} />
+        </Route>
+
         {/* Legacy /crm/* Redirect to /employee/* */}
         <Route path="/crm" element={<Navigate to="/employee/dashboard" replace />} />
         <Route path="/crm/*" element={<Navigate to="/employee/dashboard" replace />} />
-
-        {/* Legacy /company-admin/* Redirect to /admin/* */}
-        <Route path="/company-admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/company-admin/*" element={<Navigate to="/admin/dashboard" replace />} />
 
         {/* Primary Employee Portal Routes (/employee/*) */}
         <Route path="/employee" element={<CrmLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<EmployeeDashboard />} />
+          <Route path="today" element={<TodayView />} />
+          <Route path="pipeline" element={<MyLeadsPage />} />
+          <Route path="deals" element={<MyDealsPage />} />
           <Route path="employees" element={<ProfileNotificationsPage />} />
           <Route path="leads" element={<MyLeadsPage />} />
           <Route path="leads/details" element={<LeadDetailsPage />} />
@@ -166,6 +184,7 @@ export function App() {
         <Route path="/manager" element={<ManagerLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ManagerDashboard />} />
+          <Route path="deals" element={<TeamDealsPage />} />
           <Route path="managers" element={<ManagerEmployeeList />} />
           <Route path="employees" element={<ManagerEmployeeList />} />
           <Route path="employees/create" element={<ManagerCreateEmployee />} />
@@ -203,11 +222,13 @@ export function App() {
           <Route path="managers" element={<AdminManagerList />} />
           <Route path="managers/create" element={<AdminCreateManager />} />
           <Route path="managers/:id" element={<AdminManagerDetails />} />
+          <Route path="managers/:id/team" element={<AdminManagerDetails />} />
           <Route path="managers/:id/edit" element={<AdminEditManager />} />
 
           {/* Employees */}
           <Route path="employees" element={<AdminEmployeeList />} />
           <Route path="employees/:id" element={<AdminEmployeeDetails />} />
+          <Route path="employees/:id/performance" element={<AdminEmployeeDetails />} />
 
           {/* Organizations */}
           <Route path="organizations" element={<AdminOrgList />} />
@@ -254,6 +275,14 @@ export function App() {
           <Route path="settings/company-settings" element={<CompanySettings />} />
           <Route path="profile" element={<AdminProfile />} />
           <Route path="profile/change-password" element={<AdminChangePassword />} />
+        </Route>
+
+        {/* Legacy /company-admin/* Aliases */}
+        <Route path="/company-admin/employees/:id/performance" element={<CompanyAdminLayout />} >
+          <Route index element={<AdminEmployeeDetails />} />
+        </Route>
+        <Route path="/company-admin/managers/:id/team" element={<CompanyAdminLayout />} >
+          <Route index element={<AdminManagerDetails />} />
         </Route>
 
         {/* UI Playground */}
