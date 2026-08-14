@@ -348,14 +348,9 @@ const EmployeeDashboard = () => {
           <div className="rounded-xl border border-gray-200 shadow-sm bg-white p-6 flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                <ClipboardList className="w-5 h-5 text-blue-600" /> Upcoming Tasks
+                <ClipboardList className="w-5 h-5 text-blue-600" /> Tasks Assigned by Manager
               </h2>
-              <button 
-                onClick={() => setShowAddTaskModal(true)}
-                className="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold px-2 py-1 rounded-md flex items-center gap-1 cursor-pointer"
-              >
-                <Plus className="w-3 h-3" /> Add Task
-              </button>
+              <span className="text-xs text-gray-400 font-medium">Assigned Tasks</span>
             </div>
 
             <div className="flex flex-col gap-3">
